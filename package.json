@@ -1,0 +1,14 @@
+{
+  "name": "pro-cat-root",
+  "version": "1.0.0",
+  "private": true,
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "scripts": {
+    "dev": "concurrently \"npm --prefix client run dev\" \"npm --prefix server run start\"",
+    "dev:client": "npm --prefix client run dev",
+    "dev:server": "npm --prefix server run start",
+    "install-all": "npm --prefix client install && npm --prefix server install"
+  }
+}
