@@ -43,7 +43,7 @@ api.interceptors.response.use(
           // Unauthorized - clear token and redirect to login
           if (typeof window !== 'undefined') {
             localStorage.removeItem('token');
-            window.location.href = '/';
+            //window.location.href = '/login';
           }
           break;
         case 403:

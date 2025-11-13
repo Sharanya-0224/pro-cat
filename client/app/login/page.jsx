@@ -9,6 +9,7 @@ export default function LoginPage() {
     const router= useRouter();
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false)
+    const [showPassword, setShowPassword] = useState(false)
     const [formData,setFormData] = useState({
         email:"",
         password:""
@@ -78,18 +79,40 @@ export default function LoginPage() {
                 />
             </div>
 
-            <div className="relative">
-                <input
-                name="password"
-                type="password"
-                placeholder="PASSWORD"
-                value={formData.password}
-                onChange={handleInputChange}
-                required
-                //disabled={loading}
-                className="w-full p-3 bg-transparent border-b-2 border-gray-500 text-white outline-none"
-                />
-            </div>
+                        <div className="relative">
+                                <input
+                                name="password"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="PASSWORD"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                required
+                                //disabled={loading}
+                                className="w-full p-3 pr-10 bg-transparent border-b-2 border-gray-500 text-white outline-none"
+                                />
+                                <button
+                                    type="button"
+                                    aria-label={showPassword ? "Hide password" : "Show password"}
+                                    onClick={() => setShowPassword((v) => !v)}
+                                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 p-1"
+                                >
+                                    {showPassword ? (
+                                        // Eye with slash
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                                            <path d="M3 3l18 18" />
+                                            <path d="M10.58 10.58A3 3 0 0 0 12 15a3 3 0 0 0 2.42-4.42" />
+                                            <path d="M9.88 5.09A10.46 10.46 0 0 1 12 5c5 0 9 4 10 7-.
+                                            27.76-.76 1.5-1.38 2.2M6.61 6.61C4.6 7.76 3.06 9.52 2 12c1 3 5 7 10 7 1.3 0 2.55-.25 3.7-.7" />
+                                        </svg>
+                                    ) : (
+                                        // Eye
+                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                                            <path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z" />
+                                            <circle cx="12" cy="12" r="3" />
+                                        </svg>
+                                    )}
+                                </button>
+                        </div>
 
             {error && <p className="text-red-400 text-sm">{error}</p>}
 

@@ -9,6 +9,8 @@ export default function RegisterPage() {
     const router = useRouter()
     const [error, setError] = useState("")
     const [loading, setLoading] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirm, setShowConfirm] = useState(false)
     const [formData, setFormData] = useState({
         name:"",
         email: "",
@@ -112,26 +114,66 @@ export default function RegisterPage() {
 
             <div className="relative">
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 name="password"
                 placeholder="PASSWORD"
                 value={formData.password}
                 onChange={handleInputChange}
                 required
-                className="w-full p-3 bg-transparent border-b-2 border-gray-500 text-white outline-none"
+                className="w-full p-3 pr-10 bg-transparent border-b-2 border-gray-500 text-white outline-none"
               />
+              <button
+                type="button"
+                aria-label={showPassword ? "Hide password" : "Show password"}
+                onClick={() => setShowPassword(v => !v)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 p-1"
+              >
+                {showPassword ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c1.61 0 3.14.37 4.5 1.03" />
+                    <path d="M21.542 12C20.268 16.057 16.477 19 12 19c-1.61 0-3.14-.37-4.5-1.03" />
+                    <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-5.12" />
+                    <path d="M3 3l18 18" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
             </div>
 
             <div className="relative">
               <input
-                type="password"
+                type={showConfirm ? "text" : "password"}
                 name="confirmPassword"
                 placeholder="CONFIRM PASSWORD"
                 value={formData.confirmPassword}
                 onChange={handleInputChange}
                 required
-                className="w-full p-3 bg-transparent border-b-2 border-gray-500 text-white outline-none"
+                className="w-full p-3 pr-10 bg-transparent border-b-2 border-gray-500 text-white outline-none"
               />
+              <button
+                type="button"
+                aria-label={showConfirm ? "Hide password" : "Show password"}
+                onClick={() => setShowConfirm(v => !v)}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-200 p-1"
+              >
+                {showConfirm ? (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c1.61 0 3.14.37 4.5 1.03" />
+                    <path d="M21.542 12C20.268 16.057 16.477 19 12 19c-1.61 0-3.14-.37-4.5-1.03" />
+                    <path d="M9.88 9.88A3 3 0 0 0 12 15a3 3 0 0 0 2.12-5.12" />
+                    <path d="M3 3l18 18" />
+                  </svg>
+                ) : (
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
+                    <path d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                    <circle cx="12" cy="12" r="3" />
+                  </svg>
+                )}
+              </button>
             </div>
 
             {error && <p className="text-red-400 text-sm">{error}</p>}
