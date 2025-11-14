@@ -1,65 +1,72 @@
-"use client";
-import { useEffect, useState } from "react";
-
-function decodeJwtPayload(token) {
-  try {
-    const parts = token.split(".");
-    if (parts.length !== 3) return null;
-    const base64 = parts[1].replace(/-/g, "+").replace(/_/g, "/");
-    const jsonStr = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-        .join("")
-    );
-    return JSON.parse(jsonStr);
-  } catch {
-    return null;
-  }
-}
+'use client'
+import React, { useState, useEffect, useMemo } from "react";
+import Navbar from "../components/navbar/page";
+import ProCard from "../components/product-card/page";
+import FilterPanel from "../components/filterpanel/page";
+import SearchBar from "../components/searchbar/page";
 
 export default function HomePage() {
-  const [payload, setPayload] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [filters, setFilters] = useState({ category: "", price: 2000 });
+  const [searchQuery, setSearchQuery] = useState('');
+  
 
   useEffect(() => {
-    try {
-      let token = null;
-
-      // Try localStorage 'token'
-      const lsToken =
-        typeof window !== "undefined" ? localStorage.getItem("token") : null;
-      if (lsToken && lsToken !== "undefined" && lsToken !== "null") token = lsToken;
-
-      // Fallback: cookie 'token'
-      if (!token && typeof document !== "undefined") {
-        const m = document.cookie.match(/(?:^|;\s*)token=([^;]+)/);
-        if (m) token = decodeURIComponent(m[1]);
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch("http://localhost:5000/api/home");
+        const data = await res.json();
+        setProducts(data);
+      } catch (err) {
+        console.error("Failed to fetch products:", err);
       }
-
-      // Fallback: 'user'.token
-      if (!token && typeof window !== "undefined") {
-        const rawUser = localStorage.getItem("user");
-        if (rawUser && rawUser !== "undefined") {
-          try {
-            const u = JSON.parse(rawUser);
-            if (u && typeof u.token === "string") token = u.token;
-          } catch {}
-        }
-      }
-
-      const p = token ? decodeJwtPayload(token) : null;
-      setPayload(p || { error: "No valid token found" });
-    } catch {
-      setPayload({ error: "Failed to read token" });
-    }
+    };
+    fetchProducts();
   }, []);
 
+  const filteredProducts = useMemo(() => {
+     
+    return products.filter((product) => {
+      const matchCategory =
+        !filters.category || product.category === filters.category;
+      const matchPrice = product.cost <= filters.price;
+      const matchSearch =
+      product.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      product.description.toLowerCase().includes(searchQuery.toLowerCase());
+
+      return matchCategory && matchPrice && matchSearch;
+    });
+  }, [products, filters]);
+
   return (
-    <div className="min-h-screen p-6">
-      <h1 className="text-2xl font-bold mb-4">Token payload</h1>
-      <pre className="bg-black-100 p-4 rounded">
-        {JSON.stringify(payload, null, 2)}
-      </pre>
+    <div data-theme="dark">
+      <header>
+        <Navbar />
+        <div className="flex gap-14 p-3 justify-center">
+          <SearchBar onSearch={setSearchQuery}/>
+          <FilterPanel onFilter={setFilters} />
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-3 gap-y-20 gap-x-28 py-14 px-36 place-items-centre">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <ProCard
+              key={product._id}
+              _id={product._id}
+              userId="69153fc2efd715982a86575c"
+              image={product.image}
+              title={product.title}
+              description={product.description}
+              cost={`₹${product.cost}`}
+            />
+          ))
+        ) : (
+          <p className="text-center text-gray-400 col-span-full">
+            No products found.
+          </p>
+        )}
+      </div>
     </div>
   );
 }
