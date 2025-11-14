@@ -33,7 +33,14 @@ export default function LoginPage() {
             const res = await auth.login(formData.email, formData.password);
 
             localStorage.setItem("token", res.token);
-            localStorage.setItem("user", JSON.stringify(res.user))
+            localStorage.setItem("userId", res.id);
+            const userData = { 
+                name: res.name, 
+                email: formData.email,
+                username: res.username,
+                id: res.id 
+            };
+            localStorage.setItem("user", JSON.stringify(userData));
 
             router.push("/home") //push to home page
         } catch (err) {

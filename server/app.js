@@ -2,6 +2,8 @@ import express from "express"
 import mongoose from "mongoose"
 import loginRouter from "./controllers/login.js"
 import registerRouter from "./controllers/register.js"
+import cartRouter from "./controllers/cart.js"
+import homeRouter from "./controllers/home.js"
 import config from "./utils/config.js"
 import logger from "./utils/logger.js"
 import middleware from "./utils/middleware.js"
@@ -27,6 +29,8 @@ app.use(middleware.getTokenFrom)
 
 app.use('/api/auth/login', loginRouter)
 app.use('/api/auth/register', registerRouter)
+app.use('/api/cart', cartRouter)
+app.use('/api/home', homeRouter)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)

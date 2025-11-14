@@ -4,11 +4,21 @@ import Navbar from "../components/navbar/page";
 import ProCard from "../components/product-card/page";
 import FilterPanel from "../components/filterpanel/page";
 import SearchBar from "../components/searchbar/page";
+import getActiveUserId from "../../utils/user";
 
 export default function HomePage() {
   const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({ category: "", price: 2000 });
   const [searchQuery, setSearchQuery] = useState('');
+  const [addingStates, setAddingStates] = useState({});
+  const userId = getActiveUserId();
+
+  const handleAddingChange = (productId, isAdding) => {
+    setAddingStates(prev => ({
+      ...prev,
+      [productId]: isAdding
+    }));
+  };
   
 
   useEffect(() => {
@@ -54,11 +64,13 @@ export default function HomePage() {
             <ProCard
               key={product._id}
               _id={product._id}
-              userId="69153fc2efd715982a86575c"
+              userId={userId}
               image={product.image}
               title={product.title}
               description={product.description}
               cost={`₹${product.cost}`}
+              isAdding={addingStates[product._id] || false}
+              onAddingChange={(isAdding) => handleAddingChange(product._id, isAdding)}
             />
           ))
         ) : (
